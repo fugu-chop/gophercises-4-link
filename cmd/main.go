@@ -2,11 +2,20 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
 	"golang.org/x/net/html"
 )
+
+const aTag = "a"
+const href = "href"
+
+type Link struct {
+	Href string
+	Text string
+}
 
 func main() {
 	fileLocationFlag := flag.String(
@@ -28,5 +37,37 @@ func main() {
 		log.Fatalf("could not parse html: %v", err)
 	}
 
-	_ = doc
+	slice := parseHtml(doc, &[]Link{})
+
+	for _, link := range *slice {
+		fmt.Printf("%+v", link)
+	}
+
+}
+
+func parseHtml(n *html.Node, linkSlice *[]Link) *[]Link {
+	// Logic
+	if n.Type == html.ElementNode && n.Data == aTag {
+		for _, a := range n.Attr {
+			if a.Key == href {
+				newLink := Link{
+					Href: a.Val,
+					// This is not correct
+					Text: a.Namespace,
+				}
+				*linkSlice = append(*linkSlice, newLink)
+			}
+		}
+	}
+
+	// We'll use breadth first search
+	if n.NextSibling != nil {
+		parseHtml(n.NextSibling, linkSlice)
+	}
+
+	if n.FirstChild != nil {
+		parseHtml(n.FirstChild, linkSlice)
+	}
+
+	return linkSlice
 }
