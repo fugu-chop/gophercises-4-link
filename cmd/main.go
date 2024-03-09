@@ -45,6 +45,7 @@ func main() {
 
 }
 
+// Might have to try the next child or something to extract the text?
 func parseHtml(n *html.Node, linkSlice *[]Link) *[]Link {
 	// Logic
 	if n.Type == html.ElementNode && n.Data == aTag {
@@ -52,8 +53,7 @@ func parseHtml(n *html.Node, linkSlice *[]Link) *[]Link {
 			if a.Key == href {
 				newLink := Link{
 					Href: a.Val,
-					// This is not correct
-					Text: a.Namespace,
+					Text: n.FirstChild.Data,
 				}
 				*linkSlice = append(*linkSlice, newLink)
 			}
