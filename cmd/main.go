@@ -46,9 +46,7 @@ func main() {
 
 }
 
-// Might have to try the next child or something to extract the text?
 func parseHtml(n *html.Node, linkSlice *[]Link) *[]Link {
-	// Logic
 	if n.Type == html.ElementNode && n.Data == aTag {
 		for _, a := range n.Attr {
 			if a.Key == href {
@@ -84,6 +82,8 @@ func parseLinkText(n *html.Node) string {
 		linkText += parseLinkText(n.FirstChild)
 	}
 
+	// The additional logic stops the recursion from digging
+	// into neighbouring tags
 	if n.NextSibling != nil && n.NextSibling.Data != aTag {
 		linkText += parseLinkText(n.NextSibling)
 	}
