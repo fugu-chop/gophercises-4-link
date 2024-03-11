@@ -21,7 +21,7 @@ type Link struct {
 func main() {
 	fileLocationFlag := flag.String(
 		"file location",
-		"./examples/ex4.html",
+		"./examples/ex3.html",
 		"specify the file location of html to parse",
 	)
 	flag.Parse()
@@ -59,13 +59,12 @@ func parseHtml(n *html.Node, linkSlice *[]Link) *[]Link {
 		}
 	}
 
-	// We'll use breadth first search
-	if n.NextSibling != nil {
-		parseHtml(n.NextSibling, linkSlice)
-	}
-
 	if n.FirstChild != nil {
 		parseHtml(n.FirstChild, linkSlice)
+	}
+
+	if n.NextSibling != nil {
+		parseHtml(n.NextSibling, linkSlice)
 	}
 
 	return linkSlice
@@ -83,7 +82,7 @@ func parseLinkText(n *html.Node) string {
 	}
 
 	// The additional logic stops the recursion from digging
-	// into neighbouring tags
+	// into neighbouring link tags
 	if n.NextSibling != nil && n.NextSibling.Data != aTag {
 		linkText += parseLinkText(n.NextSibling)
 	}
