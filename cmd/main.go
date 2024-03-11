@@ -21,7 +21,7 @@ type Link struct {
 func main() {
 	fileLocationFlag := flag.String(
 		"file location",
-		"./examples/ex2.html",
+		"./examples/ex4.html",
 		"specify the file location of html to parse",
 	)
 	flag.Parse()
@@ -52,8 +52,6 @@ func parseHtml(n *html.Node, linkSlice *[]Link) *[]Link {
 	if n.Type == html.ElementNode && n.Data == aTag {
 		for _, a := range n.Attr {
 			if a.Key == href {
-				// 	fmt.Println(n.FirstChild.NextSibling.FirstChild.Type)
-				// 	fmt.Println(n.FirstChild.NextSibling.FirstChild.Data)
 				newLink := Link{
 					Href: a.Val,
 					Text: strings.TrimSpace(parseLinkText(n)),
@@ -86,7 +84,7 @@ func parseLinkText(n *html.Node) string {
 		linkText += parseLinkText(n.FirstChild)
 	}
 
-	if n.NextSibling != nil {
+	if n.NextSibling != nil && n.NextSibling.Data != aTag {
 		linkText += parseLinkText(n.NextSibling)
 	}
 
