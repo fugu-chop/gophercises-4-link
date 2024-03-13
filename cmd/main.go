@@ -34,7 +34,6 @@ func main() {
 	slice := link.ParseHtml(doc, &[]link.Link{})
 
 	for _, link := range *slice {
-		fmt.Printf("%+v", link)
+		fmt.Printf("%+v\n", link)
 	}
-
 }
